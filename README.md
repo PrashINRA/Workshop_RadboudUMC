@@ -3,8 +3,6 @@ workshop_scripts
 
 # This interactive workshop is designed to get scRNA-seq data (GSE120221) and process it for biological meannigful insights
 
-
-
 **Step1:download and unzip the GSE120221 data**
 
 ```console
@@ -68,7 +66,7 @@ rm(list=setdiff(ls(), c('seu')))
 gc()
 ```
   
-**QC:Cell level filtering**
+**Step 3 QC:Cell level filtering**
 ```{r}
 seu <- JoinLayers(seu, assay = 'RNA')
 counts <- GetAssayData(seu, assay = 'RNA', layer = 'counts')
@@ -87,4 +85,23 @@ abline(h=MAX_GENES_PER_CELL, col='blue') # upper threshold
 
 ```
 This will create a library complexity plot (~cell vs sorted genes-per-cell). 
+
+**Step 3 QC:filter out cells with high % of MT-genes**
+
+```{r}
+seu[["percent.mt"]] <- PercentageFeatureSet(seu, pattern = "^MT-")
+mito_genes <- grep("^mt-", rownames(counts) , ignore.case=T, value=T)
+mito_gene_read_counts = Matrix::colSums(counts[mito_genes,])
+pct_mito = mito_gene_read_counts / counts_per_cell * 100
+plot(sort(pct_mito), xlab = "cells sorted by percentage mitochondrial counts", ylab = 
+       "percentage mitochondrial counts")
+
+MAX_PCT_MITO <- #what should be cutoff for %MT
+
+plot(sort(pct_mito))
+abline(h=MAX_PCT_MITO, col='red')
+
+rm(list=setdiff(ls(), c('seu')))
+gc()
+```
 
