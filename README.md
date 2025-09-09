@@ -68,10 +68,23 @@ rm(list=setdiff(ls(), c('seu')))
 gc()
 ```
   
-**Map adjusted score**
+**QC:Cell level filtering**
 ```{r}
+seu <- JoinLayers(seu, assay = 'RNA')
+counts <- GetAssayData(seu, assay = 'RNA', layer = 'counts')
+counts[1:10,1:3]
+genes_per_cell <- Matrix::colSums(counts>0) # count a gene only if it has non-zero reads mapped.
+counts_per_cell <- Matrix::colSums(counts)
+plot(sort(genes_per_cell), xlab='cell', log='y', main='genes per cell (ordered)')
 
+MIN_GENES_PER_CELL <- #What should be the value here?
+MAX_GENES_PER_CELL <- #What should be the value here?  
+
+# now replot with the thresholds being shown:
+plot(sort(genes_per_cell), xlab='cell', log='y', main='genes per cell (ordered)')
+abline(h=MIN_GENES_PER_CELL, col='magenta')  # lower threshold
+abline(h=MAX_GENES_PER_CELL, col='blue') # upper threshold
 
 ```
-This will create an adjuste DDR scores (removing confounding from replication stress). 
+This will create a library complexity plot (~cell vs sorted genes-per-cell). 
 
