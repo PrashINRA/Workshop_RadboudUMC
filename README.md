@@ -17,21 +17,57 @@ mkdir -p ~/GSE120221 && cd ~/GSE120221 && wget -O GSE120221_RAW.tar "https://www
 ```{r}
 
 # load packages
-pkgs <- c( 'ggplot2', 'Seurat','dplyr','rstatix')
+pkgs <- c( 'ggplot2', 'Seurat','dplyr','stringr')
 sapply(pkgs, library, character.only = T)
 theme_set(theme_bw())
+
+setwd("/home/prashant/GSE120221")  # adjust with you path
+
+# List triplets
+genes   <- sort(Sys.glob("GSM*_genes_*.tsv.gz"))
+bars    <- sort(Sys.glob("GSM*_barcodes_*.tsv.gz"))
+mtx     <- sort(Sys.glob("GSM*_matrix_*.mtx.gz"))
+
+stopifnot(length(genes)==length(bars), length(bars)==length(mtx), length(mtx) > 0)
+
+# Derive sample keys from the trailing token (e.g., A, B, C1, …)
+key_from <- function(x) sub(".*_(.+)\\.(mtx|tsv)\\.gz$", "\\1", x)
+
+samples <- unique(key_from(mtx))
+objs <- list()
+
+for (k in samples) {
+  g <- genes[ key_from(genes) == k ]
+  b <- bars [ key_from(bars)  == k ]
+  m <- mtx  [ key_from(mtx)   == k ]
+  stopifnot(length(g)==1, length(b)==1, length(m)==1)
+  
+  
+  mat <- tryCatch(
+    ReadMtx(mtx = m, features = g, cells = b, feature.column = 2),
+    error = function(e) ReadMtx(mtx = m, features = g, cells = b, feature.column = 1)
+  )
+  
+  objs[[k]] <- CreateSeuratObject(counts = mat, project = paste0("GSE120221_", k))
+}
+
+# Merge into one Seurat object; prefix cell barcodes with sample keys
+seu <- if (length(objs) == 1) {
+  objs[[1]]
+} else {
+  merge(x = objs[[1]], y = objs[-1], add.cell.ids = names(objs), 
+        project = "GSE120221")
+}
+
+seu
+
+rm(list=setdiff(ls(), c('seu')))
+gc()
 ```
   
 **Map adjusted score**
 ```{r}
-library(scales)
-meta <- meta %>%
-  group_by(CTs, Organ) %>%
-  mutate(DDR_adj_01 = rescale(DDR_adj, to = c(0,1))) %>%
-  ungroup()
 
-# Binary call (tune thresholds as you like)
-meta$DDR_call <- ifelse(meta$DDR_adj_01 >= 0.8, 1L, 0L)  # top 20% = high damage
 
 ```
 This will create an adjuste DDR scores (removing confounding from replication stress). 
