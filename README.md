@@ -103,5 +103,10 @@ abline(h=MAX_PCT_MITO, col='red')
 
 rm(list=setdiff(ls(), c('seu')))
 gc()
+
+#Subset the Seurat object with required cutoffs
+dim(seu)
+seu <- subset(seu, subset = nFeature_RNA >  & nFeature_RNA <  & percent.mt< )
+dim(seu)
 ```
 
