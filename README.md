@@ -9,38 +9,17 @@ workshop_scripts
 
 ```console
 # make a workspace- open terminal and do
-mkdir -p GSE57872 && cd GSE57872
+mkdir -p ~/GSE120221 && cd ~/GSE120221 && wget -O GSE120221_RAW.tar "https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSE120221&format=file" && tar -xvf GSE120221_RAW.tar
 
-# download and unzip the data: also in terminal
-wget -O - "https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSE57872&format=file&file=GSE57872%5FGBM%5Fdata%5Fmatrix%2Etxt%2Egz" \
-  | gunzip > GSE57872_GBM_data_matrix.txt
 ```
-**Step 2: Score per cell**
+**Step 2: make a Seurat object**
 
 ```{r}
-library(UCell)
-# keep only genes present
-DDR_early_use <- intersect(DDR_early, rownames(Seu))
-RS_use        <- intersect(RS,        rownames(Seu))
-Seu <- AddModuleScore_UCell(Seu, features = list(DDR_early = DDR_early_use, RS = RS_use))
-#Seu is a seurat object containing single-cell data from SSc+SjS patients and all the metadata
-# Columns created would be: 'UCell_DDR_early', 'UCell_RS'
 
-#Adjust for replication stress
-library(dplyr)
-library(broom)
-meta <- Seu@meta.data %>%
-  mutate(CTs = factor(CTs), Organ = factor(Organ))
-
-adj <- meta %>%
-  group_by(CTs, Organ) %>%
-  do({
-    m <- lm(UCell_DDR_early ~ UCell_RS + S.Score + G2M.Score + nCount_RNA + percent.mt, data = .)
-    tibble(adj_DDR = resid(m))
-  }) %>% ungroup()
-
-meta$DDR_adj <- adj$adj_DDR
-
+# load packages
+pkgs <- c( 'ggplot2', 'Seurat','dplyr','rstatix')
+sapply(pkgs, library, character.only = T)
+theme_set(theme_bw())
 ```
   
 **Map adjusted score**
