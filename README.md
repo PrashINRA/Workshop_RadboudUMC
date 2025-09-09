@@ -1,11 +1,11 @@
 # Workshop_RadboudUMC
 workshop_scripts
 
-# This interactive workshop is designed to get scRNA-seq data (GSE57872) and process it for biological meannigful insights
+# This interactive workshop is designed to get scRNA-seq data (GSE120221) and process it for biological meannigful insights
 
 
 
-**Step1:download and unzip the GSE57872 data**
+**Step1:download and unzip the GSE120221 data**
 
 ```console
 # make a workspace- open terminal and do
