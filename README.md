@@ -59,7 +59,10 @@ seu <- if (length(objs) == 1) {
         project = "GSE120221")
 }
 
-seu
+##Make a sample metadta
+seu$Sample <- factor(seu$orig.ident)
+seu$Sample <- sub("^GSE120221_", "BM_", seu$Sample)
+levels(factor(seu$Sample))
 
 rm(list=setdiff(ls(), c('seu')))
 gc()
