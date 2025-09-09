@@ -5,13 +5,13 @@ workshop_scripts
 
 
 
-**Step1:download the GSE57872 data**
+**Step1:download and unzip the GSE57872 data**
 
 ```console
-# make a workspace
+# make a workspace- open terminal and do
 mkdir -p GSE57872 && cd GSE57872
 
-# download and unzip the data: open terminal and do-
+# download and unzip the data: also in terminal
 wget -O - "https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSE57872&format=file&file=GSE57872%5FGBM%5Fdata%5Fmatrix%2Etxt%2Egz" \
   | gunzip > GSE57872_GBM_data_matrix.txt
 ```
