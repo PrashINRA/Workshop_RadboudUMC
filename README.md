@@ -109,4 +109,4 @@ dim(seu)
 seu <- subset(seu, subset = nFeature_RNA >  & nFeature_RNA <  & percent.mt< )
 dim(seu)
 ```
-
+**Step 3 QC:Remove genes which are not present in atleast 30 cells**
