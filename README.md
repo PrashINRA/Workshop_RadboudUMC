@@ -19,7 +19,7 @@ pkgs <- c( 'ggplot2', 'Seurat','dplyr','stringr')
 sapply(pkgs, library, character.only = T)
 theme_set(theme_bw())
 
-setwd("/home/prashant/GSE120221")  # adjust with you path
+setwd("/Users/prashant/GSE120221")  # adjust with you path
 
 # List triplets
 genes   <- sort(Sys.glob("GSM*_genes_*.tsv.gz"))
@@ -46,7 +46,7 @@ for (k in samples) {
     error = function(e) ReadMtx(mtx = m, features = g, cells = b, feature.column = 1)
   )
   
-  objs[[k]] <- CreateSeuratObject(counts = mat, project = paste0("GSE120221_", k))
+  objs[[k]] <- CreateSeuratObject(counts = mat, min.cells=30, project = paste0("BM_", k))
 }
 
 # Merge into one Seurat object; prefix cell barcodes with sample keys
@@ -54,13 +54,15 @@ seu <- if (length(objs) == 1) {
   objs[[1]]
 } else {
   merge(x = objs[[1]], y = objs[-1], add.cell.ids = names(objs), 
-        project = "GSE120221")
+        project = "test")
 }
 
 ##Make a sample metadta
 seu$Sample <- factor(seu$orig.ident)
-seu$Sample <- sub("^GSE120221_", "BM_", seu$Sample)
 levels(factor(seu$Sample))
+
+rm(list=setdiff(ls(), c('seu')))
+gc()
 
 rm(list=setdiff(ls(), c('seu')))
 gc()
