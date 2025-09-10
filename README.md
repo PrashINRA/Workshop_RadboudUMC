@@ -1,12 +1,12 @@
 # Workshop_RadboudUMC
 workshop_scripts
 
-# This interactive workshop is designed to get scRNA-seq data (GSE120221) and process it for biological meannigful insights
+# This interactive workshop is designed to get scRNA-seq data (GSE120221) and process it to obtain biologically meannigful insights
 
 **Step1:download and unzip the GSE120221 data**
 
 ```console
-# make a workspace- open terminal and do
+# make a workspace- open terminal and type
 mkdir -p ~/GSE120221 && cd ~/GSE120221 && wget -O GSE120221_RAW.tar "https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSE120221&format=file" && tar -xvf GSE120221_RAW.tar
 
 ```
