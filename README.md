@@ -64,8 +64,6 @@ levels(factor(seu$Sample))
 rm(list=setdiff(ls(), c('seu')))
 gc()
 
-rm(list=setdiff(ls(), c('seu')))
-gc()
 ```
   
 **Step 3 QC:Cell level filtering**
