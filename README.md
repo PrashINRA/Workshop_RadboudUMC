@@ -145,7 +145,7 @@ table(seu$Sample)
 
 ```
 
-**Step 5:Now have to do downsampling of the seurat object to make it smaller and processable using your local machines with ~16GB RAM**
+**Step 5:Now we need to downsample the seurat object to make it smaller and processable using your local machines with ~16GB RAM**
 
 ```{r}
 
