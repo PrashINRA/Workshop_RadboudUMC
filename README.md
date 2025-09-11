@@ -116,7 +116,7 @@ dim(seu)
 seu <- subset(seu, subset = nFeature_RNA >  & nFeature_RNA <  & percent.mt< )
 dim(seu)  ##Check the data dimension before and after QC
 ```
-**Normalize data and check normaize seq depths**
+**Step 4:Normalize data and check normaize seq depths**
 
 ```{r}
 seu <- NormalizeData(seu, scale.factor = median(seu$nCount_RNA))
@@ -145,13 +145,14 @@ table(seu$Sample)
 
 ```
 
-**Now we are downsampling  the seurat object to make it smaller and processable in local machines with ~16GB RAM**
+**Step 5:Now have to do downsampling of the seurat object to make it smaller and processable using your local machines with ~16GB RAM**
 
 ```{r}
 
 set.seed(100) 
 
-# sample 1000 cells per Sample group (or all cells if fewer available)
+# sample 1000 cells per Sample group
+
 n_cells <- 1000
 cells_keep <- unlist(lapply(split(colnames(seu), seu$Sample), function(cells) {
   if (length(cells) > n_cells) {
@@ -171,7 +172,7 @@ rm(list=setdiff(ls(), c('seu')))
 gc()
 ```
 
-**Process the downsampled data**
+**Step 6:Process the downsampled data**
 
 ```{r}
 seu <- seu |> NormalizeData(scale.factor = median(seu$nCount_RNA)) |>
@@ -210,7 +211,7 @@ variance.data %>%
 
 ```
 
-**Further processing for Dimension Reduction, clustering and it's optimization**
+**Step 7:Further processing for Dimension Reduction, clustering and it's optimization**
 
 
 ```{r}
@@ -240,7 +241,7 @@ seu <- FindClusters(seu, resolution = 0.3) |>
 
 ```
 
-**Visualizations**
+**Step 7:Visualizations**
 
 ```{r}
 library(RColorBrewer)
@@ -266,7 +267,7 @@ scplotter::CellDimPlot(seu, reduction = 'umap', group_by='Celltypes',label=T,lab
 
 ```
 
-**How to annotate cells**
+**Step 8:How to annotate cells**
 
 ```{r}
 ##Find DEGs per cluser
@@ -322,5 +323,8 @@ rm(list=setdiff(ls(), c('seu', 'cl.markers', 'clust_cols')))
 gc()
 ```
 
-**How to check contribution of each donor on celltypes?**
+**Q1:How to check contribution of each donor on celltypes?**
+
+
+**Q2:How to use references to annotate your cells?**
 
