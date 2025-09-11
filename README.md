@@ -1,4 +1,4 @@
-# Workshop_RadboudUMC
+# Workshop_RadboudUMC 2025
 workshop_scripts
 
 # This interactive workshop is designed to get scRNA-seq data (GSE120221) and process it to obtain biologically meannigful insights
